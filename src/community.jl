@@ -61,8 +61,8 @@ abundances(c) = state(c)[present_species(c)]
 """
     linearise(c)
 
-The [`ContinuousJacobian`](@ref) of a continuous-time community at its current state, with the
-abundances of the species present as its equilibrium.
+The `ContinuousJacobian` (an [`EquilibriumJacobian`](@ref)) of a continuous-time community at
+its current state, with the abundances of the species present as its equilibrium.
 """
 linearise(c) = ContinuousJacobian(jacobian(c), abundances(c))
 
