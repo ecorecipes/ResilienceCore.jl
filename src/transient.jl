@@ -83,19 +83,24 @@ not reactive in the chosen norm, the envelope never exceeds its initial value of
 result is `(1.0, 0)`. Otherwise the scan stops when the propagator is within `settle` of its
 limit (zero for an equilibrium; the dominant-mode projector for a projection, whose norm is the
 asymptotic amplification) or at `tmax`.
+
+The amplification of an unstable equilibrium is unbounded, so the result is `(Inf, Inf)`. The
+same is returned if the propagator overflows during the scan.
 """
 function max_amplification(op::LinearisedDynamics{ContinuousTime}; p = default_norm(op), dt::Real = 0.1,
                            tmax::Real = 1e4, settle::Real = 1e-8)
+    op isa EquilibriumJacobian && !isstable(op) && return (Inf, Inf)
     reactivity(op; p = p) ≤ 0 && return (1.0, 0.0)
     M = standardised(op, p)
     return scan(op, M, exp(M * dt), dt, floor(Int, tmax / dt), p, settle)
 end
 function max_amplification(op::LinearisedDynamics{DiscreteTime}; p = default_norm(op), tmax::Integer = 10^4,
                            settle::Real = 1e-8)
+    op isa EquilibriumJacobian && !isstable(op) && return (Inf, Inf)
     reactivity(op; p = p) ≤ 0 && return (1.0, 0)
     M = standardised(op, p)
     best, k = scan(op, M, M, 1, tmax, p, settle)
-    return (best, round(Int, k))
+    return isfinite(best) ? (best, round(Int, k)) : (Inf, Inf)
 end
 
 function scan(op, M, step, dt, nmax, p, settle)
@@ -103,6 +108,7 @@ function scan(op, M, step, dt, nmax, p, settle)
     Φ = Matrix(step)
     best, tbest = 1.0, 0.0
     for k in 1:nmax
+        all(isfinite, Φ) || return (Inf, Inf)
         A = opnorm(Φ, p)
         A > best && ((best, tbest) = (A, k * dt))
         opnorm(Φ - limit, p) < settle * max(1.0, opnorm(limit, p)) && break

@@ -36,6 +36,11 @@
     iso = ContinuousJacobian(-a * Matrix(1.0I, 4, 4))
     @test resilience(iso) ≈ a && reactivity(iso) ≈ -a
     @test max_amplification(iso) == (1.0, 0.0)
+
+    # unstable equilibria: amplification is unbounded, reported as (Inf, Inf) rather than an
+    # overflow in LAPACK (the powers of a map with spectral radius 3 overflow in ~650 steps)
+    @test max_amplification(DiscreteJacobian([3.0 1.0; 0.0 0.5])) == (Inf, Inf)
+    @test max_amplification(ContinuousJacobian([0.2 1.0; 0.0 -1.0])) == (Inf, Inf)
     @test stochastic_invariability(iso) ≈ a
     @test press_sensitivity(iso) ≈ 4 / a
 
