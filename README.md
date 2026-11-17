@@ -47,6 +47,24 @@ definitions together:
 - growth rate and damping ratio agree with StructuredPopulationCore;
 - integral-projection metrics do not depend on the mesh once it is weighted.
 
+## From models to operators
+
+`linearise` builds the operator from a model, through package extensions:
+
+```julia
+using ResilienceCore, OrdinaryDiffEq        # loads SciMLBase and ForwardDiff
+J = linearise(ODEProblem(f, u_star, tspan, p))           # ContinuousJacobian at u_star
+D = linearise(DiscreteProblem(g, x_star, tspan, p))      # DiscreteJacobian at a fixed point
+
+using MatrixProjectionModels, IntegralProjectionModels
+linearise(MPMProblem(mpm, n0, (0, 50)))                  # ProjectionMatrix
+linearise(IPMProblem(kernel, domain, n0, (0, 50)))       # ProjectionMatrix with mesh weights
+```
+
+The SciML route reaches every ecorecipes model with a steady state, because the packages lower
+their models with `to_ode_problem` and `to_discrete_problem`. `linearise` checks that the point
+is an equilibrium or fixed point, and uses an analytic `jac` when the problem has one.
+
 ## Installation
 
 Neither this package nor StructuredPopulationCore is registered yet:
@@ -69,8 +87,12 @@ The operator types and their metrics:
 - Floquet return rates;
 - Markov mixing.
 
+`linearise` for SciML ODE, steady-state and discrete problems, and for matrix and integral
+projection models.
+
 Planned, in order:
-- `linearise` for SciML problems and package extensions for the ecorecipes model packages;
+- extensions for MatrixCommunityModels, FiniteStatePopulationDynamics and
+  ContinuousStatePopulationDynamics;
 - stochastic environments;
 - simulation-based resilience (basin stability, early-warning indicators);
 - composition results (Kronecker spectra of stratified models, lumping bounds).

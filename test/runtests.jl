@@ -9,4 +9,5 @@ using StructuredPopulationCore: StructuredPopulationCore
     include("test_projection.jl")
     include("test_markov_periodic.jl")
     include("test_community.jl")
+    include("test_linearise.jl")
 end

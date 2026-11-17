@@ -72,13 +72,38 @@ without_species
 jacobian
 richness
 abundances
-linearise
 PerturbationOptions
 global_mortality_tolerance
 local_mortality_tolerances
 press_response
 removal_responses
 extinction_tolerance
+```
+
+## Operators from models
+
+`linearise` turns a model into the operator its metrics need. A community gives the Jacobian at
+its current state. A SciML `ODEProblem`, `SteadyStateProblem` or `DiscreteProblem` gives the
+Jacobian at an equilibrium or fixed point. Every ecorecipes package lowers its models to these
+with `to_ode_problem` or `to_discrete_problem`, so this route reaches any model with a steady
+state. Density-independent matrix and integral projection models give a projection operator,
+with mesh weights for an IPM. The model-specific methods are package extensions, loaded with
+SciMLBase (plus ForwardDiff for automatic differentiation), MatrixProjectionModels or
+IntegralProjectionModels.
+
+```julia
+using ResilienceCore, OrdinaryDiffEq          # OrdinaryDiffEq loads SciMLBase and ForwardDiff
+
+lv(u, p, t) = p.r .* u .* (1 .- p.A * u)      # Lotka–Volterra competition
+p = (r = [1.0, 0.7], A = [1.0 0.3; 0.4 1.0])
+ustar = p.A \ ones(2)
+J = linearise(ODEProblem(lv, ustar, (0.0, 1.0), p))   # a ContinuousJacobian
+resilience(J), reactivity(J)
+```
+
+```@docs
+linearise
+mesh_weights
 ```
 
 ## Applicability
