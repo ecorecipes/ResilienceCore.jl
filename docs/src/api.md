@@ -120,6 +120,24 @@ affine_equilibrium
 periodic_generator
 ```
 
+## Sign patterns
+
+When only the signs of a Jacobian's entries are known, for example from a causal loop diagram
+or a qualitative food-web model, a [`SignPattern`](@ref) supports qualitative stability and
+press analysis by sampling magnitudes. Links of unknown sign are sampled with either sign.
+
+```julia
+s = SignPattern([-1 -1 0; 1 -1 -1; 0 1 -1]; labels = ["plant", "herbivore", "predator"])
+quasi_sign_stability(s)                 # (fraction, se)
+press_sign_determinacy(s).sign          # sign of each response to a press
+```
+
+```@docs
+SignPattern
+quasi_sign_stability
+press_sign_determinacy
+```
+
 ## Applicability
 
 ```@docs

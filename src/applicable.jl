@@ -3,7 +3,7 @@
 const METRICS = (growth_rate, resilience, isstable, reactivity, max_amplification, stochastic_invariability,
                  sensitivity_matrix, press_sensitivity, total_sensitivity, growth_sensitivity, elasticity,
                  median_reactivity, median_max_amplification, median_resilience, stationary_distribution,
-                 mixing_time)
+                 mixing_time, quasi_sign_stability, press_sign_determinacy)
 
 """
     applicable_metrics(x)
@@ -15,7 +15,7 @@ throws a `MethodError` whose message names the ones that are.
 applicable_metrics(x) = applicable_metrics(typeof(x))
 applicable_metrics(T::Type) = [f for f in METRICS if hasmethod(f, Tuple{T})]
 
-const OPERATORS = Union{LinearisedDynamics,PeriodicOperator,MarkovKernel}
+const OPERATORS = Union{LinearisedDynamics,PeriodicOperator,MarkovKernel,SignPattern}
 
 function __init__()
     Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs

@@ -28,6 +28,7 @@ export pulse_covariance, median_reactivity, median_displacement, median_max_ampl
 export sensitivity_matrix, press_sensitivity, total_sensitivity, stochastic_invariability, growth_sensitivity,
        elasticity
 export stationary_distribution, mixing_time
+export SignPattern, quasi_sign_stability, press_sign_determinacy
 export applicable_metrics
 export state, present_species, with_mortality, without_species, jacobian, richness, abundances, linearise
 export mesh_weights, affine_equilibrium, periodic_generator
@@ -40,6 +41,7 @@ include("transient.jl")
 include("median.jl")
 include("press.jl")
 include("markov.jl")
+include("signs.jl")
 include("applicable.jl")
 include("community.jl")
 include("linearise.jl")
