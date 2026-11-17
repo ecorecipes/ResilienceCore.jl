@@ -64,3 +64,57 @@ function autodiff_jacobian(f, u, inplace)
                         "(`using ForwardDiff`; OrdinaryDiffEq loads it), or give the problem's function " *
                         "an analytic `jac`"))
 end
+
+"""
+    affine_equilibrium(G, b) -> Vector{Float64}
+
+The equilibrium `u* = −G⁻¹ b` of the affine linear model `du/dt = G u + b`, for example a
+stage-structured population with constant immigration or recruitment `b`. Its Jacobian is `G`
+itself, so `ContinuousJacobian(G, affine_equilibrium(G, b))` describes the return to it.
+
+Throws an `ArgumentError` if `G` is not stable (spectral abscissa `≥ 0`, so no attracting
+equilibrium) or is singular. For a generator with non-negative off-diagonal entries that is
+stable, `−G⁻¹ ≥ 0`, so a non-negative `b` gives a non-negative `u*`.
+"""
+function affine_equilibrium(G::AbstractMatrix, b::AbstractVector)
+    n = checksquare(G, "G")
+    length(b) == n || throw(ArgumentError("b has $(length(b)) entries for a $n × $n matrix"))
+    s = spectral_abscissa(G)
+    s < 0 || throw(ArgumentError("G is not stable (spectral abscissa $s ≥ 0): du/dt = G u + b has no attracting " *
+                                 "equilibrium"))
+    F = lu(Matrix{Float64}(G); check = false)
+    issuccess(F) || throw(ArgumentError("G is singular: du/dt = G u + b has no unique equilibrium"))
+    return -(F \ Vector{Float64}(b))
+end
+
+"""
+    periodic_generator(G, T; steps = 100, weights = nothing) -> PeriodicOperator
+
+The period map of a density-independent model `du/dt = G(t) u` whose generator `G` (a function of
+time returning a matrix with non-negative off-diagonal entries) has period `T`, as a
+[`PeriodicOperator`](@ref) of `steps` projection matrices `exp(G(tᵢ) Δt)`, with `Δt = T / steps` and
+`tᵢ = (i − ½) Δt` the midpoints of the sub-intervals of `[0, T]`. No ODE solver is needed. The
+approximation is exact when the `G(t)` commute (for example `G(t) = f(t) Q`) and the midpoint
+rule integrates `f` exactly, and converges as `steps` grows otherwise.
+
+Each part is one sub-step `Δt`, so the operator's per-step metrics are per `Δt`: the growth factor
+over a period is `growth_rate(op)^steps`, and the growth rate per unit time is
+`log(growth_rate(op)) / Δt`. `weights` are the mesh weights of a discretised continuous state
+(see [`mesh_weights`](@ref)); ones by default.
+"""
+function periodic_generator(G, T::Real; steps::Integer = 100, weights = nothing)
+    T > 0 || throw(ArgumentError("the period must be positive, got $T"))
+    steps ≥ 1 || throw(ArgumentError("steps must be at least 1, got $steps"))
+    Δt = T / steps
+    parts = map(1:steps) do i
+        t = (i - 0.5) * Δt
+        Gt = G(t)
+        Q = Generator(Gt; weights = something(weights, ones(size(Gt, 1))))   # checks off-diagonal signs
+        E = exp(Δt * operator(Q))
+        # exp of a matrix with non-negative off-diagonal entries is non-negative; clear rounding
+        tiny = 64 * eps() * max(1.0, maximum(abs, E))
+        all(≥(-tiny), E) || throw(ArgumentError("exp(G(t) Δt) has negative entries at t = $t"))
+        ProjectionMatrix(max.(E, 0.0); weights = Q.weights)
+    end
+    return PeriodicOperator(parts)
+end

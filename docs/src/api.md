@@ -101,9 +101,23 @@ J = linearise(ODEProblem(lv, ustar, (0.0, 1.0), p))   # a ContinuousJacobian
 resilience(J), reactivity(J)
 ```
 
+Two helpers serve linear continuous-time models that are not plain generators: an affine
+model `du/dt = G u + b` returns to the equilibrium [`affine_equilibrium`](@ref) gives, with
+Jacobian `G`, and a periodically forced generator `G(t)` becomes a [`PeriodicOperator`](@ref)
+with [`periodic_generator`](@ref), without an ODE solver. Model packages call them from their
+own `linearise` methods.
+
+```julia
+G = [-1.0 0.5; 0.2 -0.8]
+J = ContinuousJacobian(G, affine_equilibrium(G, [1.0, 0.5]))
+op = periodic_generator(t -> (1 + 0.5sin(π * t)) * G, 2.0; steps = 100)
+```
+
 ```@docs
 linearise
 mesh_weights
+affine_equilibrium
+periodic_generator
 ```
 
 ## Applicability

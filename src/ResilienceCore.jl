@@ -13,8 +13,8 @@ shared core of the ecorecipes projection-model packages.
 """
 module ResilienceCore
 
-using LinearAlgebra: I, Diagonal, Symmetric, eigen, eigmax, eigvals, inv, kron, norm, opnorm, svdvals, sylvester,
-                     tr
+using LinearAlgebra: I, Diagonal, Symmetric, eigen, eigmax, eigvals, inv, issuccess, kron, lu, norm, opnorm, svdvals,
+                     sylvester, tr
 using Random: Random, AbstractRNG
 using StructuredPopulationCore: AbstractTimeSemantics, ContinuousTime, DiscreteTime, ContinuousDomain, DiscreteDomain,
                                 step_size, n_states
@@ -30,7 +30,7 @@ export sensitivity_matrix, press_sensitivity, total_sensitivity, stochastic_inva
 export stationary_distribution, mixing_time
 export applicable_metrics
 export state, present_species, with_mortality, without_species, jacobian, richness, abundances, linearise
-export mesh_weights
+export mesh_weights, affine_equilibrium, periodic_generator
 export PerturbationOptions, global_mortality_tolerance, local_mortality_tolerances, press_response, removal_responses,
        extinction_tolerance
 

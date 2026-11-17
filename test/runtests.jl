@@ -10,4 +10,5 @@ using StructuredPopulationCore: StructuredPopulationCore
     include("test_markov_periodic.jl")
     include("test_community.jl")
     include("test_linearise.jl")
+    include("test_affine_periodic.jl")
 end
