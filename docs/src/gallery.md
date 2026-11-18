@@ -20,7 +20,7 @@ These packages use it:
 | Chytridiomycosis.jl | [Thresholds and resilience](https://ecorecipes.github.io/Chytridiomycosis.jl/dev/tutorials/07_resilience/) | resilience falls to zero at the Hopf threshold, and a load-tipping fold |
 | PartiallySpecifiedModels.jl | [Resilience of fitted models](https://github.com/ecorecipes/PartiallySpecifiedModels.jl/blob/main/vignettes/42_resilience/42_resilience.md) | uncertainty in resilience and the Hopf point from bootstrap fits of a mechanistic and a spline model |
 | PhysiologicallyBasedDemographicModels.jl | [Temperature, annual cycles and recovery](https://ecorecipes.github.io/PhysiologicallyBasedDemographicModels.jl/dev/tutorials/65_resilience/) | resilience against temperature, annual maps and recovery under real weather |
-| ArkModelZoo.jl | [Resilience of agent-based models](https://github.com/ecorecipes/ArkModelZoo.jl/blob/main/vignettes/resilience/resilience.md) | Daisyworld's basin and early warnings before collapse; Wolf–Sheep recovery and its noise floor |
+| ArkModelZoo.jl | [Resilience of agent-based models](https://ecorecipes.github.io/ArkModelZoo.jl/dev/tutorials/resilience/resilience/) | Daisyworld's basin and early warnings before collapse; Wolf–Sheep recovery and its noise floor |
 | EcologicalCellularAutomata.jl | [Resilience of a viral front near its threshold](https://ecorecipes.github.io/EcologicalCellularAutomata.jl/dev/tutorials/34_viral_resilience/) | return time and establishment near a critical point, and warnings along a ramp |
 | IndividualBasedPopulationDynamics.jl | [Resilience of an individual-based population](https://ecorecipes.github.io/IndividualBasedPopulationDynamics.jl/dev/tutorials/04_resilience/) | return of a size distribution after a cull, against its projection model and the demographic-noise floor |
 
@@ -40,9 +40,9 @@ These packages use it:
   weights.
 - **FiniteStatePopulationDynamics.jl:** generator problems give a `Generator`, the Jacobian at an
   affine equilibrium, or a `PeriodicOperator`
-  ([section](https://github.com/ecorecipes/FiniteStatePopulationDynamics.jl/blob/main/docs/src/index.md#resilience-operators)).
+  ([section](https://ecorecipes.github.io/FiniteStatePopulationDynamics.jl/dev/#Resilience-operators)).
 - **ContinuousStatePopulationDynamics.jl:** the same, with mesh weights
-  ([section](https://github.com/ecorecipes/ContinuousStatePopulationDynamics.jl/blob/main/docs/src/index.md#resilience-operators)).
+  ([section](https://ecorecipes.github.io/ContinuousStatePopulationDynamics.jl/dev/#Resilience-operators)).
 
 ## Markov chains and sign patterns
 
