@@ -27,11 +27,11 @@ StructuredPopulationCore = {url = "https://github.com/ecorecipes/ProjectionModel
 
 [compat]
 ForwardDiff = "0.10, 1"
-IntegralProjectionModels = "0.1, 0.2"
+IntegralProjectionModels = "0.2"
 LinearAlgebra = "1"
-MatrixProjectionModels = "0.1, 0.2"
+MatrixProjectionModels = "0.2"
 Random = "1"
-SciMLBase = "2, 3"
+SciMLBase = "3.58"
 StructuredPopulationCore = "0.1"
 Test = "1"
 julia = "1.11"
