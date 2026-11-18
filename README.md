@@ -65,6 +65,14 @@ The SciML route reaches every ecorecipes model with a steady state, because the 
 their models with `to_ode_problem` and `to_discrete_problem`. `linearise` checks that the point
 is an equilibrium or fixed point, and uses an analytic `jac` when the problem has one.
 
+## Gallery
+
+The [gallery](https://ecorecipes.github.io/ResilienceCore.jl/dev/gallery/) links to the
+resilience tutorials of the ecorecipes packages that use ResilienceCore:
+- SciML models, through [DynamicalResilience.jl](https://github.com/ecorecipes/DynamicalResilience.jl);
+- community matrices, food webs and structured populations;
+- Markov chains, sign patterns and agent-based and cellular-automaton models.
+
 ## Installation
 
 Neither this package nor StructuredPopulationCore is registered yet:

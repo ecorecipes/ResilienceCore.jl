@@ -14,7 +14,7 @@ makedocs(;
                                   edit_link = ingit ? "main" : nothing,
                                   prettyurls = get(ENV, "CI", "false") == "true",
                                   canonical = "https://ecorecipes.github.io/ResilienceCore.jl"),
-         pages = ["Home" => "index.md", "API Reference" => "api.md"])
+         pages = ["Home" => "index.md", "Gallery" => "gallery.md", "API Reference" => "api.md"])
 
 if get(ENV, "CI", "false") == "true"
     deploydocs(; repo = "github.com/ecorecipes/ResilienceCore.jl.git", push_preview = true)
