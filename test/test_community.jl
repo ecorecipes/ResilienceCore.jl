@@ -49,3 +49,40 @@ ResilienceCore.jacobian(c::Logistic) = Diagonal(-(c.r .* c.x ./ c.K)[c.present])
     op = linearise(c)
     @test op isa ContinuousJacobian && resilience(op) ≈ minimum(r .* c.x ./ K)
 end
+
+@testset "the 27 metrics of Domínguez-García et al. (2019) by name" begin
+    r, K, d = [1.0, 1.0, 1.0], [2.0, 1.0, 0.5], [0.099, 0.199, 0.249]
+    c = Logistic(r, K, d, ones(3), trues(3))
+    B = sum(c.x)
+    drop = K .* 0.1 .* d ./ r                    # each species' loss under its own 10% press
+
+    g = global_press_response(c)
+    @test values(g) == press_response(c, fill(1.1, 3))
+    lp = local_press_responses(c)
+    @test [x.relative for x in lp] ≈ drop ./ B && [x.l1 for x in lp] ≈ drop ./ B
+    @test all(x -> x.extinctions == 0, lp)
+
+    # the Jacobian part: J = −diag(a), so every quantity is known in closed form
+    a = r .* c.x ./ K
+    jp = jacobian_profile(linearise(c))
+    @test keys(jp) == (:R0, :Is, :Amax, :tmax, :Rinf, :MR0, :MAmax, :Mtmax, :MRinf, :S, :mean_sij)
+    @test jp.R0 ≈ -minimum(a) && jp.Rinf ≈ minimum(a) && jp.Is ≈ minimum(a)
+    @test jp.Amax == 1 && jp.tmax == 0 && jp.MAmax == 1
+    @test jp.S ≈ sum(1 ./ a) && jp.mean_sij ≈ sum(1 ./ a) / 9
+    @test jp.MR0 ≈ median_reactivity(linearise(c))
+    # a map: the same metrics through the discrete-time methods
+    jd = jacobian_profile(DiscreteJacobian(exp(Matrix(jacobian(c))), c.x))
+    @test jd.Rinf ≈ minimum(a) && jd.R0 ≈ -minimum(a) && jd.Amax == 1
+
+    prof = stability_profile(c)
+    @test length(prof) == 27
+    @test prof[keys(jp)] == jp
+    @test prof.TM == global_mortality_tolerance(c) && prof.min_TM == minimum(local_mortality_tolerances(c))
+    @test prof.mean_TM ≈ sum(local_mortality_tolerances(c)) / 3
+    @test prof.mean_CE == 0 && prof.max_CE == 0 && prof.TE ≈ 2 / 3   # independent species
+    @test prof.RM ≈ sum(drop) / B && prof.SM ≈ sum(drop) / B
+    @test prof.mean_RM ≈ sum(drop) / 3B && prof.max_RM ≈ maximum(drop) / B
+    @test prof.mean_SM ≈ sum(drop) / 3B && prof.max_SM ≈ maximum(drop) / B
+    @test prof.mean_RE ≈ 1 / 3 && prof.max_RE ≈ maximum(c.x) / B
+    @test prof.mean_SE ≈ 1 / 3 && prof.max_SE ≈ maximum(c.x) / B
+end

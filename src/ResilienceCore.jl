@@ -33,7 +33,8 @@ export applicable_metrics
 export state, present_species, with_mortality, without_species, jacobian, richness, abundances, linearise
 export mesh_weights, affine_equilibrium, periodic_generator
 export PerturbationOptions, global_mortality_tolerance, local_mortality_tolerances, press_response, removal_responses,
-       extinction_tolerance
+       extinction_tolerance, global_press_response, local_press_responses
+export jacobian_profile, stability_profile
 
 include("operators.jl")
 include("spectral.jl")
@@ -45,5 +46,6 @@ include("signs.jl")
 include("applicable.jl")
 include("community.jl")
 include("linearise.jl")
+include("profile.jl")
 
 end

@@ -78,6 +78,17 @@ local_mortality_tolerances
 press_response
 removal_responses
 extinction_tolerance
+global_press_response
+local_press_responses
+```
+
+## The 27 metrics by name
+
+See the [Metric catalogue](catalogue.md).
+
+```@docs
+jacobian_profile
+stability_profile
 ```
 
 ## Operators from models

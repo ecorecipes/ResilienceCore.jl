@@ -1,6 +1,6 @@
 name = "ResilienceCore"
 uuid = "e31f93f6-99b1-4a70-b0c5-c402beffe4e1"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Simon Frost"]
 
 [deps]
