@@ -18,7 +18,7 @@ These packages use it:
 | Package | Tutorial | What it shows |
 |---|---|---|
 | Chytridiomycosis.jl | [Thresholds and resilience](https://ecorecipes.github.io/Chytridiomycosis.jl/dev/tutorials/07_resilience/) | resilience falls to zero at the Hopf threshold, and a load-tipping fold |
-| PartiallySpecifiedModels.jl | [Resilience of fitted models](https://github.com/ecorecipes/PartiallySpecifiedModels.jl/blob/main/vignettes/42_resilience/42_resilience.md) | uncertainty in resilience and the Hopf point from bootstrap fits of a mechanistic and a spline model |
+| PartiallySpecifiedModels.jl | [Resilience of fitted models](https://ecorecipes.github.io/PartiallySpecifiedModels.jl/dev/tutorials/42_resilience/) | uncertainty in resilience and the Hopf point from bootstrap fits of a mechanistic and a spline model |
 | PhysiologicallyBasedDemographicModels.jl | [Temperature, annual cycles and recovery](https://ecorecipes.github.io/PhysiologicallyBasedDemographicModels.jl/dev/tutorials/65_resilience/) | resilience against temperature, annual maps and recovery under real weather |
 | ArkModelZoo.jl | [Resilience of agent-based models](https://ecorecipes.github.io/ArkModelZoo.jl/dev/tutorials/resilience/resilience/) | Daisyworld's basin and early warnings before collapse; Wolf–Sheep recovery and its noise floor |
 | EcologicalCellularAutomata.jl | [Resilience of a viral front near its threshold](https://ecorecipes.github.io/EcologicalCellularAutomata.jl/dev/tutorials/34_viral_resilience/) | return time and establishment near a critical point, and warnings along a ramp |
