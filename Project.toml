@@ -1,6 +1,6 @@
 name = "ResilienceCore"
 uuid = "e31f93f6-99b1-4a70-b0c5-c402beffe4e1"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Simon Frost"]
 
 [deps]
@@ -10,26 +10,18 @@ StructuredPopulationCore = "33358fd2-7d60-4541-bded-caea801370e0"
 
 [weakdeps]
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
-IntegralProjectionModels = "00376763-44f4-49c9-a075-cdcba60854bb"
-MatrixProjectionModels = "521f12cc-5854-454d-93a2-8be28ae7cee2"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 
 [extensions]
 ResilienceCoreForwardDiffExt = "ForwardDiff"
-ResilienceCoreIntegralProjectionModelsExt = "IntegralProjectionModels"
-ResilienceCoreMatrixProjectionModelsExt = "MatrixProjectionModels"
 ResilienceCoreSciMLBaseExt = "SciMLBase"
 
 [sources]
-IntegralProjectionModels = {url = "https://github.com/ecorecipes/IntegralProjectionModels.jl"}
-MatrixProjectionModels = {url = "https://github.com/ecorecipes/MatrixProjectionModels.jl"}
 StructuredPopulationCore = {url = "https://github.com/ecorecipes/ProjectionModels.jl"}
 
 [compat]
 ForwardDiff = "0.10, 1"
-IntegralProjectionModels = "0.2"
 LinearAlgebra = "1"
-MatrixProjectionModels = "0.2"
 Random = "1"
 SciMLBase = "3.58"
 StructuredPopulationCore = "0.1"
@@ -38,10 +30,8 @@ julia = "1.11"
 
 [extras]
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
-IntegralProjectionModels = "00376763-44f4-49c9-a075-cdcba60854bb"
-MatrixProjectionModels = "521f12cc-5854-454d-93a2-8be28ae7cee2"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "ForwardDiff", "SciMLBase", "MatrixProjectionModels", "IntegralProjectionModels"]
+test = ["Test", "ForwardDiff", "SciMLBase"]

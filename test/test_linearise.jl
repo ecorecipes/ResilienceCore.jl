@@ -1,10 +1,6 @@
 using SciMLBase: SciMLBase, ODEProblem, ODEFunction, SteadyStateProblem, DiscreteProblem
 using ForwardDiff: ForwardDiff
-using MatrixProjectionModels: MatrixProjectionModels, MatrixProjectionModel, MPMProblem
-using IntegralProjectionModels: IntegralProjectionModels, IPMProblem, PKernel, FKernel, MegaKernel, MatrixKernel,
-                                LinearSurvival, NormalGrowth, FecundityRate, GeneralIPM, materialize
-using StructuredPopulationCore: ContinuousDomain, DiscreteDomain, DensityDependent, StochasticKernelResampled,
-                                step_size, meshpoints
+using StructuredPopulationCore: ContinuousDomain, DiscreteDomain
 
 @testset "linearise: SciML problems" begin
     # Lotka–Volterra competition: du/dt = r u (1 − A u); equilibrium u* = A⁻¹ 1, J = −diag(r u*) A
@@ -62,52 +58,8 @@ using StructuredPopulationCore: ContinuousDomain, DiscreteDomain, DensityDepende
     @test resilience(step) / Δt ≈ resilience(flow) rtol = 1e-8
 end
 
-@testset "linearise: matrix projection models" begin
-    A = [0.0 3.0 1.0; 0.5 0.0 0.0; 0.0 0.3 0.0]
-    m = MatrixProjectionModel(A)
-    @test linearise(m) isa ProjectionMatrix
-    @test growth_rate(linearise(m)) ≈ StructuredPopulationCore.lambda(A)
-    prob = MPMProblem(m, ones(3), (0, 10))
-    @test growth_rate(linearise(prob)) ≈ StructuredPopulationCore.lambda(A)
-    @test resilience(linearise(prob)) ≈ log(StructuredPopulationCore.damping_ratio(A))
-    @test growth_rate(linearise(MPMProblem(A, ones(3), (0, 10)))) ≈ StructuredPopulationCore.lambda(A)
-    @test_throws ArgumentError linearise(MPMProblem(DensityDependent(), (n, t, p) -> A, ones(3), (0, 10)))
-    @test_throws ArgumentError linearise(MPMProblem([m, MatrixProjectionModel(0.9A)], ones(3), (0, 10)))
-end
-
-@testset "linearise: integral projection models" begin
-    s = LinearSurvival(2.2, 0.25)
-    g = NormalGrowth(0.2, 1.02, 0.7)
-    f = FecundityRate(0.003, 0.015, 2.0, 0.3, 1.0)
-    function ipm(n)
-        domain = ContinuousDomain(0.0, 50.0, n)
-        return IPMProblem(PKernel(s, g, domain) + FKernel(f, domain), domain, ones(n), (0, 10))
-    end
-
-    op = linearise(ipm(100))
-    @test op isa ProjectionMatrix
-    @test op.weights ≈ fill(0.5, 100)
+# linearise for matrix and integral projection models is tested in those packages
+@testset "mesh_weights" begin
     @test mesh_weights(ContinuousDomain(0.0, 50.0, 100)) ≈ fill(0.5, 100)
     @test mesh_weights(DiscreteDomain([:a, :b])) == ones(2)
-    @test growth_rate(op) ≈ StructuredPopulationCore.lambda(materialize(ipm(100).kernel))
-
-    # the metrics approximate those of the integral operator, so they converge with the mesh
-    fine = linearise(ipm(400))
-    @test growth_rate(op) ≈ growth_rate(fine) rtol = 1e-3
-    @test reactivity(op) ≈ reactivity(fine) rtol = 1e-2
-    @test max_amplification(op)[1] ≈ max_amplification(fine)[1] rtol = 1e-2
-
-    # a general IPM with a discrete seedbank: weights h for the mesh, 1 for the seedbank
-    size_domain = ContinuousDomain(0.0, 10.0, 20)
-    states = (size = size_domain, seedbank = DiscreteDomain([:seedbank]))
-    h = step_size(size_domain)
-    z = meshpoints(size_domain)
-    mk = MegaKernel(; states,
-                    size_to_size = PKernel(LinearSurvival(1.0, 0.1), NormalGrowth(0.5, 0.9, 0.5), size_domain),
-                    seedbank_to_size = MatrixKernel(reshape(0.3 .* exp.(-(z .- 2) .^ 2), 20, 1)),
-                    size_to_seedbank = MatrixKernel(reshape(0.1 .* exp.(0.01 .* z) .* h, 1, 20)),
-                    seedbank_to_seedbank = MatrixKernel(fill(0.5, 1, 1)))
-    general = linearise(IPMProblem(GeneralIPM(), mk, states, ones(21), (0, 10)))
-    @test general.weights ≈ [fill(h, 20); 1.0]
-    @test growth_rate(general) ≈ StructuredPopulationCore.lambda(materialize(mk))
 end

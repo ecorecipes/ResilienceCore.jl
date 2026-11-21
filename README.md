@@ -49,14 +49,15 @@ definitions together:
 
 ## From models to operators
 
-`linearise` builds the operator from a model, through package extensions:
+`linearise` builds the operator from a model. The SciML methods come from a package extension;
+modelling packages that depend on ResilienceCore add methods for their own problems:
 
 ```julia
 using ResilienceCore, OrdinaryDiffEq        # loads SciMLBase and ForwardDiff
 J = linearise(ODEProblem(f, u_star, tspan, p))           # ContinuousJacobian at u_star
 D = linearise(DiscreteProblem(g, x_star, tspan, p))      # DiscreteJacobian at a fixed point
 
-using MatrixProjectionModels, IntegralProjectionModels
+using MatrixProjectionModels, IntegralProjectionModels  # each defines its own methods
 linearise(MPMProblem(mpm, n0, (0, 50)))                  # ProjectionMatrix
 linearise(IPMProblem(kernel, domain, n0, (0, 50)))       # ProjectionMatrix with mesh weights
 ```

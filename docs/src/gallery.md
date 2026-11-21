@@ -35,9 +35,9 @@ These packages use it:
 
 ## Structured populations
 
-- **MatrixProjectionModels.jl and IntegralProjectionModels.jl:** `linearise` comes from
-  extensions in ResilienceCore. It gives a `ProjectionMatrix`, or a `Generator` with mesh
-  weights.
+- **MatrixProjectionModels.jl and IntegralProjectionModels.jl:** each defines `linearise` for
+  its density-independent, deterministic problems. It gives a `ProjectionMatrix`, with mesh
+  weights for an IPM.
 - **FiniteStatePopulationDynamics.jl:** generator problems give a `Generator`, the Jacobian at an
   affine equilibrium, or a `PeriodicOperator`
   ([section](https://ecorecipes.github.io/FiniteStatePopulationDynamics.jl/dev/#Resilience-operators)).

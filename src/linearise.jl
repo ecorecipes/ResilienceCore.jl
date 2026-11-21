@@ -1,6 +1,6 @@
-# Getting operators out of models. The methods live in package extensions; their documentation
-# lives here, on the `linearise` binding, so that it is part of the manual whether or not the
-# extensions are loaded.
+# Getting operators out of models. The SciML methods live in a package extension; their
+# documentation lives here, on the `linearise` binding, so that it is part of the manual whether
+# or not the extension is loaded. Modelling packages add methods for their own problem types.
 
 """
     linearise(prob::SciMLBase.ODEProblem, u = prob.u0; p = prob.p, t = first(prob.tspan),
@@ -26,21 +26,16 @@ Available when SciMLBase is loaded (extension `ResilienceCoreSciMLBaseExt`).
 
 ---
 
-    linearise(m::MatrixProjectionModels.MatrixProjectionModel)   -> ProjectionMatrix
-    linearise(prob::MatrixProjectionModels.MPMProblem)           -> ProjectionMatrix
-    linearise(prob::IntegralProjectionModels.IPMProblem)         -> ProjectionMatrix
+Modelling packages that depend on ResilienceCore add methods for their own problems:
 
-The density-independent projection operator of a matrix or integral projection model, as a
-[`ProjectionOperator`](@ref). For an IPM the kernel is discretised with `materialize` and the
-operator carries the mesh weights of its domain (see [`mesh_weights`](@ref)), so that its
-metrics approximate those of the integral operator and converge as the mesh is refined.
+- MatrixProjectionModels and IntegralProjectionModels: a `ProjectionMatrix` for a
+  density-independent, deterministic `MatrixProjectionModel`, `MPMProblem` or `IPMProblem`;
+  an IPM's operator carries the mesh weights of its domain (see [`mesh_weights`](@ref));
+- FiniteStatePopulationDynamics and ContinuousStatePopulationDynamics: a `Generator`, the
+  Jacobian at an affine equilibrium, or a `PeriodicOperator`.
 
-Only density-independent, deterministic problems have a single projection operator. A
-density-dependent model is linearised at a fixed point instead, through its SciML
-`DiscreteProblem`; a stochastic one has a stochastic growth rate but no single spectrum.
-
-Available when MatrixProjectionModels or IntegralProjectionModels is loaded (extensions
-`ResilienceCoreMatrixProjectionModelsExt` and `ResilienceCoreIntegralProjectionModelsExt`).
+Their documentation is in those packages. A density-dependent model is linearised at a fixed
+point instead, through its SciML `DiscreteProblem`.
 """
 linearise
 

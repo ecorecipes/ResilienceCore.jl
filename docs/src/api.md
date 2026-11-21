@@ -98,9 +98,9 @@ its current state. A SciML `ODEProblem`, `SteadyStateProblem` or `DiscreteProble
 Jacobian at an equilibrium or fixed point. Every ecorecipes package lowers its models to these
 with `to_ode_problem` or `to_discrete_problem`, so this route reaches any model with a steady
 state. Density-independent matrix and integral projection models give a projection operator,
-with mesh weights for an IPM. The model-specific methods are package extensions, loaded with
-SciMLBase (plus ForwardDiff for automatic differentiation), MatrixProjectionModels or
-IntegralProjectionModels.
+with mesh weights for an IPM; MatrixProjectionModels and IntegralProjectionModels define those
+methods themselves. The SciML methods are a package extension, loaded with SciMLBase (plus
+ForwardDiff for automatic differentiation).
 
 ```julia
 using ResilienceCore, OrdinaryDiffEq          # OrdinaryDiffEq loads SciMLBase and ForwardDiff
